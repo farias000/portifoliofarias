@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnalyticsPro | Relatórios Personalizados</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .sidebar:hover {
+            width: 250px;
+        }
+        .sidebar:hover .sidebar-text {
+            display: block;
+        }
+        .report-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .glow-text {
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.7);
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .report-tab.active {
+            border-bottom: 3px solid #4f46e5;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+        /* Estilos para o item de menu ativo */
+        .sidebar-nav-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #fff;
+            padding-left: 12px; /* Ajuste para compensar a borda */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <div class="sidebar bg-indigo-900 text-white w-20 hover:w-64 transition-all duration-300 ease-in-out fixed h-full">
+            <div class="p-4 flex items-center justify-between border-b border-indigo-800">
+                <div class="flex items-center">
+                    <i class="fas fa-chart-line text-2xl text-indigo-300"></i>
+                    <span class="sidebar-text ml-3 text-xl font-bold hidden">AnalyticsPro</span>
+                </div>
+                <i class="fas fa-bars text-indigo-300 cursor-pointer"></i>
+            </div>
+            <nav class="mt-5">
+                <ul>
+                    <li class="sidebar-nav-item py-3 px-4 hover:bg-indigo-700 transition duration-200">
+                        <a href="dashboard.html" class="flex items-center">
+                            <i class="fas fa-home text-indigo-300 text-lg"></i>
+                            <span class="sidebar-text ml-4 hidden text-sm font-medium">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item py-3 px-4 hover:bg-indigo-700 transition duration-200">
+                        <a href="fontedados.html" class="flex items-center">
+                            <i class="fas fa-database text-indigo-300 text-lg"></i>
+                            <span class="sidebar-text ml-4 hidden text-sm font-medium">Fontes de Dados</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item active py-3 px-4 hover:bg-indigo-700 transition duration-200">
+                        <a href="relatorio.html" class="flex items-center">
+                            <i class="fas fa-chart-bar text-indigo-300 text-lg"></i>
+                            <span class="sidebar-text ml-4 hidden text-sm font-medium">Relatórios</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item py-3 px-4 hover:bg-indigo-700 transition duration-200">
+                        <a href="alertas.html" class="flex items-center">
+                            <i class="fas fa-eye text-indigo-300 text-lg"></i>
+                            <span class="sidebar-text ml-4 hidden text-sm font-medium">alertas</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item py-3 px-4 hover:bg-indigo-700 transition duration-200">
+                        <a href="config.html" class="flex items-center">
+                            <i class="fas fa-cog text-indigo-300 text-lg"></i>
+                            <span class="sidebar-text ml-4 hidden text-sm font-medium">Configurações</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="absolute bottom-0 w-full p-4 border-t border-indigo-800">
+                <div class="flex items-center">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-10 h-10 rounded-full" alt="Profile">
+                    <div class="sidebar-text ml-3 hidden">
+                        <p class="font-medium">Ana Silva</p>
+                        <p class="text-xs text-indigo-300">Admin</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-1 ml-20 overflow-y-auto">
+            <header class="bg-white shadow-sm">
+                <div class="flex items-center justify-between px-6 py-4">
+                    <h1 class="text-2xl font-bold text-gray-800">Relatórios Personalizados</h1>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <input type="text" placeholder="Buscar relatórios..." class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                        <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center">
+                            <i class="fas fa-plus mr-2"></i>
+                            <span>Criar Relatório</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <main class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="report-card bg-white rounded-xl shadow-md p-6 transition duration-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Relatórios Publicados</h3>
+                            <div class="bg-indigo-100 p-2 rounded-full">
+                                <i class="fas fa-cloud-upload-alt text-indigo-500"></i>
+                            </div>
+                        </div>
+                        <p class="text-4xl font-bold text-indigo-600">12</p>
+                        <p class="text-sm text-gray-500 mt-2">Relatórios ativos e compartilhados</p>
+                    </div>
+                    <div class="report-card bg-white rounded-xl shadow-md p-6 transition duration-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Rascunhos</h3>
+                            <div class="bg-yellow-100 p-2 rounded-full">
+                                <i class="fas fa-edit text-yellow-500"></i>
+                            </div>
+                        </div>
+                        <p class="text-4xl font-bold text-yellow-600">5</p>
+                        <p class="text-sm text-gray-500 mt-2">Relatórios em andamento</p>
+                    </div>
+                    <div class="report-card bg-white rounded-xl shadow-md p-6 transition duration-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Visualizações Totais</h3>
+                            <div class="bg-green-100 p-2 rounded-full">
+                                <i class="fas fa-eye text-green-500"></i>
+                            </div>
+                        </div>
+                        <p class="text-4xl font-bold text-green-600">1,245</p>
+                        <p class="text-sm text-gray-500 mt-2">Soma de todas as visualizações</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+                    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                        <h2 class="text-lg font-semibold text-gray-800">Seus Relatórios</h2>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm flex items-center">
+                                <i class="fas fa-filter mr-1 text-xs"></i>
+                                <span>Filtrar</span>
+                            </button>
+                            <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm flex items-center">
+                                <i class="fas fa-sort mr-1 text-xs"></i>
+                                <span>Ordenar</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="divide-y divide-gray-200">
+                        <div class="p-6 hover:bg-gray-50 transition cursor-pointer flex justify-between items-center">
+                            <div>
+                                <h3 class="font-medium text-gray-900">Performance de Vendas Mensal</h3>
+                                <p class="text-sm text-gray-500 mt-1">Última atualização: 15/05/2023</p>
+                                <div class="mt-2 text-xs text-gray-400">
+                                    <i class="fas fa-user-friends mr-1"></i> Compartilhado com 3 usuários
+                                </div>
+                            </div>
+                            <div class="flex space-x-3">
+                                <button class="p-2 text-gray-400 hover:text-indigo-500 rounded-full hover:bg-indigo-50">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </button>
+                                <button class="p-2 text-gray-400 hover:text-indigo-500 rounded-full hover:bg-indigo-50">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="p-2 text-gray-400 hover:text-indigo-500 rounded-full hover:bg-indigo-50">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-6 hover:bg-gray-50 transition cursor-pointer flex justify-between items-center">
+                            <div>
+                                <h3 class="font-medium text-gray-900">Análise de Tráfego do Site</h3>
+                                <p class="text-sm text-gray-500 mt-1">Última atualização: 14/05/2023</p>
+                                <div class="mt-2 text-xs text-gray-400">
+                                    <i class="fas fa-lock mr-1"></i> Privado
+                                </div>
+                            </div>
+                            <div class="flex space-x-3">
+                                <button class="p-2 text-gray-400 hover:text-indigo-500 rounded-full hover:bg-indigo-50">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </button>
+                                <button class="p-2 text-gray-400 hover:text-indigo-500 rounded-full hover:bg-indigo-50">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="p-2 text-gray-400 hover:text-indigo-500 rounded-full hover:bg-indigo-50">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-6 hover:bg-gray-50 transition cursor-pointer flex justify-between items-center">
+                            <div>
+                                <h3 class="font-medium text-gray-900">Resultados Campanha de Marketing Q1</h3>
+                                <p class="text-sm text-gray-500 mt-1">Última atualização: 10/05/2023</p>
+                                <div class="mt-2 text-xs text-gray-400">
+                                    <i class="fas fa-user-friends mr-1"></i> Compartilhado com o time de Marketing
+                                </div>
+                            </div>
+                            <div class="flex space-x-3">
+                                <button class="p-2 text-gray-400 hover:text-indigo-500 rounded-full hover:bg-indigo-50">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </button>
+                                <button class="p-2 text-gray-400 hover:text-indigo-500 rounded-full hover:bg-indigo-50">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="p-2 text-gray-400 hover:text-indigo-500 rounded-full hover:bg-indigo-50">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 border-t border-gray-200 text-center">
+                        <button class="text-indigo-600 hover:text-indigo-800 font-medium">
+                            <i class="fas fa-plus mr-1"></i> Ver todos os relatórios
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Construtor de Relatórios Avançado</h2>
+                    <p class="text-gray-600 mb-4">Crie relatórios altamente personalizados arrastando e soltando métricas, dimensões e visualizações.</p>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500">
+                        <i class="fas fa-cogs text-4xl mb-3 text-gray-400 animate-float"></i>
+                        <p class="font-medium">Arraste e solte campos de dados aqui para começar a construir seu relatório.</p>
+                        <button class="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                            Abrir Construtor
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Placeholder for Chart.js example
+        const ctx = document.getElementById('myChart'); // Certifique-se de ter um canvas com id 'myChart'
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                    datasets: [{
+                        label: 'Vendas',
+                        data: [12, 19, 3, 5, 2, 3],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

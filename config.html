@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnalyticsPro | Configurações</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .sidebar:hover {
+            width: 250px;
+        }
+        .sidebar:hover .sidebar-text {
+            display: block;
+        }
+        .config-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .tab-active {
+            border-bottom: 3px solid #4f46e5;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #4f46e5;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="sidebar bg-indigo-900 text-white w-20 hover:w-64 transition-all duration-300 ease-in-out fixed h-full">
+            <div class="p-4 flex items-center justify-between border-b border-indigo-800">
+                <div class="flex items-center">
+                    <i class="fas fa-chart-line text-2xl text-indigo-300"></i>
+                    <span class="sidebar-text ml-3 text-xl font-bold hidden">AnalyticsPro</span>
+                </div>
+                <i class="fas fa-bars text-indigo-300 cursor-pointer"></i>
+            </div>
+            <nav class="mt-6">
+                <div class="px-4 py-3 mt-2 flex items-center hover:bg-indigo-800 rounded-r-lg cursor-pointer">
+                    <i class="fas fa-tachometer-alt text-indigo-300"></i>
+                    <a href="dashboard.html"><span class="sidebar-text ml-3 hidden">Dashboard</span></a>
+                </div>
+                <div class="px-4 py-3 mt-2 flex items-center hover:bg-indigo-800 rounded-r-lg cursor-pointer">
+                    <i class="fas fa-database text-indigo-300"></i>
+                    <a href="fontedados.html"><span class="sidebar-text ml-3 hidden">Fontes de Dados</span></a>
+                </div>
+                <div class="px-4 py-3 mt-2 flex items-center hover:bg-indigo-800 rounded-r-lg cursor-pointer">
+                    <i class="fas fa-chart-pie text-indigo-300"></i>
+                    <a href="relatorio.html"><span class="sidebar-text ml-3 hidden">Relatórios</span></a>
+                </div>
+                <div class="px-4 py-3 mt-2 flex items-center hover:bg-indigo-800 rounded-r-lg cursor-pointer">
+                    <i class="fas fa-bell text-indigo-300"></i>
+                    <a href="alertas.html"><span class="sidebar-text ml-3 hidden">Alertas</span></a>
+                </div>
+                <div class="px-4 py-3 mt-2 flex items-center bg-indigo-800 rounded-r-lg cursor-pointer">
+                    <i class="fas fa-cog text-indigo-300"></i>
+                    <span class="sidebar-text ml-3 hidden">Configurações</span>
+                </div>
+            </nav>
+            <div class="absolute bottom-0 w-full p-4 border-t border-indigo-800">
+                <div class="flex items-center">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-10 h-10 rounded-full" alt="Profile">
+                    <div class="sidebar-text ml-3 hidden">
+                        <p class="font-medium">Ana Silva</p>
+                        <p class="text-xs text-indigo-300">Admin</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 ml-20 overflow-y-auto">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm">
+                <div class="flex items-center justify-between px-6 py-4">
+                    <h1 class="text-2xl font-bold text-gray-800">Configurações do Sistema</h1>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <input type="text" placeholder="Buscar configurações..." class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                        <div class="relative">
+                            <i class="fas fa-bell text-gray-500 text-xl cursor-pointer"></i>
+                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Config Content -->
+            <main class="p-6">
+                <!-- Tabs Navigation -->
+                <div class="flex border-b border-gray-200 mb-6">
+                    <button class="tab-active px-4 py-2 mr-2 text-sm font-medium" onclick="changeTab('geral')">
+                        <i class="fas fa-cog mr-2"></i>Geral
+                    </button>
+                    <button class="px-4 py-2 mr-2 text-sm font-medium text-gray-500 hover:text-indigo-600" onclick="changeTab('seguranca')">
+                        <i class="fas fa-shield-alt mr-2"></i>Segurança
+                    </button>
+                    <button class="px-4 py-2 mr-2 text-sm font-medium text-gray-500 hover:text-indigo-600" onclick="changeTab('notificacoes')">
+                        <i class="fas fa-bell mr-2"></i>Notificações
+                    </button>
+                    <button class="px-4 py-2 mr-2 text-sm font-medium text-gray-500 hover:text-indigo-600" onclick="changeTab('integracao')">
+                        <i class="fas fa-plug mr-2"></i>Integrações
+                    </button>
+                    <button class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-indigo-600" onclick="changeTab('usuarios')">
+                        <i class="fas fa-users mr-2"></i>Usuários
+                    </button>
+                </div>
+
+                <!-- General Settings Tab -->
+                <div id="geral-tab" class="config-tab">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <!-- System Info -->
+                        <div class="config-card bg-white rounded-xl shadow-md p-6 transition duration-200">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                                <i class="fas fa-info-circle text-indigo-500 mr-2"></i>Informações do Sistema
+                            </h2>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                                    <p class="text-gray-600">Versão</p>
+                                    <p class="font-medium">2.4.1</p>
+                                </div>
+                                <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                                    <p class="text-gray-600">Última Atualização</p>
+                                    <p class="font-medium">15/06/2023</p>
+                                </div>
+                                <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                                    <p class="text-gray-600">Licença</p>
+                                    <p class="font-medium text-green-500">Ativa</p>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <p class="text-gray-600">Próxima Renovação</p>
+                                    <p class="font-medium">15/06/2024</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Appearance -->
+                        <div class="config-card bg-white rounded-xl shadow-md p-6 transition duration-200">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                                <i class="fas fa-palette text-indigo-500 mr-2"></i>Aparência
+                            </h2>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-gray-600 mb-2">Tema</label>
+                                    <div class="flex space-x-4">
+                                        <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                            <i class="fas fa-sun mr-2"></i>Claro
+                                        </button>
+                                        <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                            <i class="fas fa-moon mr-2"></i>Escuro
+                                        </button>
+                                        <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                                            <i class="fas fa-adjust mr-2"></i>Automático
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 mb-2">Densidade da Interface</label>
+                                    <div class="flex space-x-4">
+                                        <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                            Compacto
+                                        </button>
+                                        <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                                            Padrão
+                                        </button>
+                                        <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                            Confortável
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Settings -->
+                    <div class="config-card bg-white rounded-xl shadow-md p-6 mb-6 transition duration-200">
+                        <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                            <i class="fas fa-database text-indigo-500 mr-2"></i>Configurações de Dados
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-600 mb-2">Fuso Horário</label>
+                                <select class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                    <option>America/Sao_Paulo (UTC-03:00)</option>
+                                    <option>UTC</option>
+                                    <option>America/New_York (UTC-05:00)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-600 mb-2">Formato de Data</label>
+                                <select class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                    <option>DD/MM/YYYY</option>
+                                    <option>MM/DD/YYYY</option>
+                                    <option>YYYY-MM-DD</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-600 mb-2">Idioma</label>
+                                <select class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                    <option selected>Português (Brasil)</option>
+                                    <option>English (US)</option>
+                                    <option>Español</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-600 mb-2">Unidades</label>
+                                <select class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                    <option selected>Métrico (km, kg)</option>
+                                    <option>Imperial (mi, lb)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- System Actions -->
+                    <div class="config-card bg-white rounded-xl shadow-md p-6 transition duration-200">
+                        <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                            <i class="fas fa-terminal text-indigo-500 mr-2"></i>Ações do Sistema
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <button class="px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center justify-center">
+                                <i class="fas fa-redo mr-2 text-blue-500"></i>Reiniciar Serviços
+                            </button>
+                            <button class="px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center justify-center">
+                                <i class="fas fa-sync mr-2 text-green-500"></i>Verificar Atualizações
+                            </button>
+                            <button class="px-4 py-3 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 flex items-center justify-center">
+                                <i class="fas fa-power-off mr-2"></i>Reiniciar Sistema
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Settings Tab -->
+                <div id="seguranca-tab" class="config-tab hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <!-- Authentication -->
+                        <div class="config-card bg-white rounded-xl shadow-md p-6 transition duration-200">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                                <i class="fas fa-user-lock text-indigo-500 mr-2"></i>Autenticação
+                            </h2>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="font-medium">Autenticação em Dois Fatores</p>
+                                        <p class="text-sm text-gray-500">Requer código adicional no login</p>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="font-medium">Login com Google</p>
+                                        <p class="text-sm text-gray-500">Permitir autenticação via Google</p>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="font-medium">Login com Microsoft</p>
+                                        <p class="text-sm text-gray-500">Permitir autenticação via Microsoft</p>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="pt-4 border-t border-gray-100">
+                                    <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                                        <i class="fas fa-save mr-2"></i>Salvar Configurações
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Password Policy -->
+                        <div class="config-card bg-white rounded-xl shadow-md p-6 transition duration-200">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                                <i class="fas fa-key text-indigo-500 mr-2"></i>Política de Senhas
+                            </h2>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-gray-600 mb-1">Complexidade Mínima</label>
+                                    <select class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                        <option>Básica (6 caracteres)</option>
+                                        <option selected>Média (8 caracteres, 1 especial)</option>
+                                        <option>Alta (10 caracteres, 1 maiúscula, 1 número, 1 especial)</option>
+                                    </select>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="font-medium">Expiração de Senha</p>
+                                        <p class="text-sm text-gray-500">Forçar troca periódica</p>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 mb-1">Dias para Expirar</label>
+                                    <input type="number" value="90" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                </div>
+                                <div class="pt-4 border-t border-gray-100">
+                                    <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                                        <i class="fas fa-save mr-2"></i>Salvar Configurações
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Session Management -->
+                    <div class="config-card bg-white rounded-xl shadow-md p-6 mb-6 transition duration-200">
+                        <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                            <i class="fas fa-clock text-indigo-500 mr-2"></i>Gerenciamento de Sessão
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-600 mb-1">Tempo de Inatividade</label>
+                                <select class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                    <option>15 minutos</option>
+                                    <option selected>30 minutos</option>
+                                    <option>1 hora</option>
+                                    <option>4 horas</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-600 mb-1">Máximo de Sessões</label>
+                                <select class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                    <option>1 dispositivo</option>
+                                    <option selected>3 dispositivos</option>
+                                    <option>5 dispositivos</option>
+                                    <option>Ilimitado</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Logs -->
+                    <div class="config-card bg-white rounded-xl shadow-md p-6 transition duration-200">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg font-semibold text-gray-800">
+                                <i class="fas fa-shield-alt text-indigo-500 mr-2"></i>Registros de Segurança
+                            </h2>
+                            <button class="px-3 py-1 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700">
+                                <i class="fas fa-download mr-1"></i>Exportar Logs
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Evento</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuário</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15/06/2023 14:32</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Login bem-sucedido</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">ana.silva</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">192.168.1.45</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15/06/2023 10:15</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Configuração alterada</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">admin</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">192.168.1.10</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">14/06/2023 18:45</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">Tentativa de login falhou</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">convidado</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">192.168.1.78</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Settings Tab -->
+                <div id="notificacoes-tab" class="config-tab hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <!-- Notification Channels -->
+                        <div class="config-card bg-white rounded-xl shadow-md p-6 transition duration-200">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                                <i class="fas fa-bell text-indigo-500 mr-2"></i>Canais de Notificação
+                            </h2>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="font-medium">Notificações por Email</p>
+                                        <p class="text-sm text-gray-500">Receber alertas importantes por email</p>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 mb-1">Email Principal</label>
+                                    <input type="email" value="ana.silva@empresa.com" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="font-medium">Notificações Push</p>
+                                        <p class="text-sm text-gray-500">Receber notificações no navegador</p>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="font-medium">Notificações SMS</p>
+                                        <p class="text-sm text-gray-500">Receber alertas críticos por SMS</p>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 mb-1">Número de Celular</label>
+                                    <input type="tel" placeholder="+55 (11) 99999-9999" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notification Preferences -->
+                        <div class="config-card bg-white rounded-xl shadow-md p-6 transition duration-200">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                                <i class="fas fa-sliders-h text-indigo-500 mr-2"></i>Preferências
+                            </h2>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-gray-600 mb-2">Horário de Notificação</label>
+                                    <div class="flex space-x-4">
+                                        <div class="flex-1">
+                                            <label class="block text-sm text-gray-500 mb-1">Das</label>
+                                            <select class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                                <option>08:00</option>
+                                                <option selected>09:00</option>
+                                                <option>10:00</option>
+                                            </select>
+                                        </div>
+                                        <div class="flex-1">
+                                            <label class="block text-sm text-gray-500 mb-1">Até</label>
+                                            <select class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                                <option>17:00</option>
+                                                <option selected>18:00</option>
+                                                <option>19:00</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 mb-2">Tipos de Notificação</label>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="notif-alerts" checked class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                            <label for="notif-alerts" class="ml-2 block text-sm text-gray-700">Alertas do Sistema</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="notif-updates" checked class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                            <label for="notif-updates" class="ml-2 block text-sm text-gray-700">Atualizações</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="notif-news" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                            <label for="notif-news" class="ml-2 block text-sm text-gray-700">Novidades</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 mb-2">Volume de Notificação</label>
+                                    <input type="range" min="0" max="100" value="70" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notification Templates -->
+                    <div class="config-card bg-white rounded-xl shadow-md p-6 transition duration-200">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg font-semibold text-gray-800">
+                                <i class="fas fa-envelope text-indigo-500 mr-2"></i>Modelos de Notificação
+                            </h2>
+                            <button class="px-3 py-1 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700">
+                                <i class="fas fa-plus mr-1"></i>Novo Modelo
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Canal</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Alerta Crítico</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Sistema</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Email, SMS</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Ativo</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-red-600 hover:text-red-900">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Atualização Semanal</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Relatório</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Email</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Ativo</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-red-600 hover:text-red-900">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Boas-vindas</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Usuário</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Email</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Inativo</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-red-600 hover:text-red-900">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Integrations Tab -->
+                <div id="integracao-tab" class="config-tab hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <!-- Google Analytics -->
+                        <div class="config-card bg-white rounded-xl shadow-md p-6 transition duration-200">
+                            <div class="flex items-center mb-4">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Google_Analytics_logo.svg/1200px-Google_Analytics_logo.svg.png" class="h-8 mr-3" alt="Google Analytics">
+                                <h2 class="text-lg font-semibold text-gray-800">Google Analytics</h2>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="font-medium">Status</p>
+                                        <p class="text-sm text-gray-500">Integração com Analytics</p>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 mb-1">ID de Acompanhamento</label>
+                                    <input type="text" value="UA-12345678-1" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                </div>
+                                <div class="pt-4 border-t border-gray-100">
+                                    <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                                        <i class="fas fa-save mr-2"></i>Salvar Configurações
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slack -->
+                        <div class="config-card bg-white rounded-xl shadow-md p-6 transition duration-200">
+                            <div class="flex items-center mb-4">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Slack_icon_2019.svg/2048px-Slack_icon_2019.svg.png" class="h-8 mr-3" alt="Slack">
+                                <h2 class="text-lg font-semibold text-gray-800">Slack</h2>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="font-medium">Status</p>
+                                        <p class="text-sm text-gray-500">Integração com Slack</p>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 mb-1">Webhook URL</label>
+                                    <input type="text" placeholder="https://hooks.slack.com/services/..." class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 mb-1">Canal</label>
+                                    <input type="text" placeholder="#alertas" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Zapier -->
+                        <div class="config-card bg-white rounded-xl shadow-md p-6 transition duration-200">
+                            <div class="flex items-center mb-4">
+                                <img src="https://cdn.worldvectorlogo.com/logos/zapier.svg" class="h-8 mr-3" alt="Zapier">
+                                <h2 class="text-lg font-semibold text-gray-800">Zapier</h2>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="font-medium">Status</p>
+                                        <p class="text-sm text-gray-500">Integração com Zapier</p>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 mb-1">API Key</label>
+                                    <input type="password" placeholder="••••••••••••" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                </div>
+                                <div class="pt-4 border-t border-gray-100">
+                                    <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                                        <i class="fas fa-key mr-2"></i>Gerar Nova Chave
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- More Integrations -->
+                    <div class="config-card bg-white rounded-xl shadow-md p-6 transition duration-200">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg font-semibold text-gray-800">
+                                <i class="fas fa-plug text-indigo-500 mr-2"></i>Mais Integrações
+                            </h2>
+                            <button class="px-3 py-1 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700">
+                                <i class="fas fa-plus mr-1"></i>Adicionar
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                            <div class="border border-gray-200 rounded-lg p-4 text-center hover:bg-gray-50 cursor-pointer">
+                                <img src="https://cdn.worldvectorlogo.com/logos/mailchimp.svg" class="h-10 mx-auto mb-2" alt="Mailchimp">
+                                <p class="text-sm font-medium">Mailchimp</p>
+                            </div>
+                            <div class="border border-gray-200 rounded-lg p-4 text-center hover:bg-gray-50 cursor-pointer">
+                                <img src="https://cdn.worldvectorlogo.com/logos/trello.svg" class="h-10 mx-auto mb-2" alt="Trello">
+                                <p class="text-sm font-medium">Trello</p>
+                            </div>
+                            <div class="border border-gray-200 rounded-lg p-4 text-center hover:bg-gray-50 cursor-pointer">
+                                <img src="https://cdn.worldvectorlogo.com/logos/salesforce.svg" class="h-10 mx-auto mb-2" alt="Salesforce">
+                                <p class="text-sm font-medium">Salesforce</p>
+                            </div>
+                            <div class="border border-gray-200 rounded-lg p-4 text-center hover:bg-gray-50 cursor-pointer">
+                                <img src="https://cdn.worldvectorlogo.com/logos/microsoft-teams.svg" class="h-10 mx-auto mb-2" alt="Teams">
+                                <p class="text-sm font-medium">Teams</p>
+                            </div>
+                            <div class="border border-gray-200 rounded-lg p-4 text-center hover:bg-gray-50 cursor-pointer">
+                                <img src="https://cdn.worldvectorlogo.com/logos/dropbox-3.svg" class="h-10 mx-auto mb-2" alt="Dropbox">
+                                <p class="text-sm font-medium">Dropbox</p>
+                            </div>
+                            <div class="border border-gray-200 rounded-lg p-4 text-center hover:bg-gray-50 cursor-pointer">
+                                <img src="https://cdn.worldvectorlogo.com/logos/paypal.svg" class="h-10 mx-auto mb-2" alt="PayPal">
+                                <p class="text-sm font-medium">PayPal</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Tab -->
+                <div id="usuarios-tab" class="config-tab hidden">
+                    <div class="config-card bg-white rounded-xl shadow-md p-6 mb-6 transition duration-200">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg font-semibold text-gray-800">
+                                <i class="fas fa-users text-indigo-500 mr-2"></i>Gerenciamento de Usuários
+                            </h2>
+                            <button class="px-3 py-1 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700">
+                                <i class="fas fa-plus mr-1"></i>Novo Usuário
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Função</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img class="h-10 w-10 rounded-full" src="https://randomuser.me/api/portraits/women/44.jpg" alt="">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Ana Silva</div>
+                                                    <div class="text-sm text-gray-500">Último login: hoje</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">ana.silva@empresa.com</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 bg-indigo-100 text-indigo-800 text-xs rounded-full">Admin</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Ativo</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-red-600 hover:text-red-900">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img class="h-10 w-10 rounded-full" src="https://randomuser.me/api/portraits/men/32.jpg" alt="">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Carlos Oliveira</div>
+                                                    <div class="text-sm text-gray-500">Último login: ontem</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">carlos.oliveira@empresa.com</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">Analista</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Ativo</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-red-600 hover:text-red-900">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img class="h-10 w-10 rounded-full" src="https://randomuser.me/api/portraits/women/12.jpg" alt="">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Mariana Costa</div>
+                                                    <div class="text-sm text-gray-500">Último login: 2 dias atrás</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">mariana.costa@empresa.com</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">Visualizador</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Pendente</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-red-600 hover:text-red-900">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Roles & Permissions -->
+                    <div class="config-card bg-white rounded-xl shadow-md p-6 transition duration-200">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg font-semibold text-gray-800">
+                                <i class="fas fa-user-shield text-indigo-500 mr-2"></i>Funções e Permissões
+                            </h2>
+                            <button class="px-3 py-1 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700">
+                                <i class="fas fa-plus mr-1"></i>Nova Função
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Admin Role -->
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div>
+                                        <h3 class="font-medium">Administrador</h3>
+                                        <p class="text-sm text-gray-500">Acesso total ao sistema</p>
+                                    </div>
+                                    <span class="px-2 py-1 bg-indigo-100 text-indigo-800 text-xs rounded-full">3 usuários</span>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" checked disabled class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label class="ml-2 block text-sm text-gray-700">Dashboard</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" checked disabled class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label class="ml-2 block text-sm text-gray-700">Relatórios</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" checked disabled class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label class="ml-2 block text-sm text-gray-700">Alertas</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" checked disabled class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label class="ml-2 block text-sm text-gray-700">Configurações</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Analyst Role -->
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div>
+                                        <h3 class="font-medium">Analista</h3>
+                                        <p class="text-sm text-gray-500">Acesso a dados e relatórios</p>
+                                    </div>
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">5 usuários</span>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" checked disabled class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label class="ml-2 block text-sm text-gray-700">Dashboard</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" checked disabled class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label class="ml-2 block text-sm text-gray-700">Relatórios</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" checked disabled class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label class="ml-2 block text-sm text-gray-700">Alertas</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" disabled class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label class="ml-2 block text-sm text-gray-700">Configurações</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Viewer Role -->
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div>
+                                        <h3 class="font-medium">Visualizador</h3>
+                                        <p class="text-sm text-gray-500">Acesso somente leitura</p>
+                                    </div>
+                                    <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">2 usuários</span>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" checked disabled class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label class="ml-2 block text-sm text-gray-700">Dashboard</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" checked disabled class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label class="ml-2 block text-sm text-gray-700">Relatórios</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" disabled class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label class="ml-2 block text-sm text-gray-700">Alertas</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" disabled class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label class="ml-2 block text-sm text-gray-700">Configurações</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function changeTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.config-tab').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            // Show selected tab
+            document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+            
+            // Update active tab style
+            document.querySelectorAll('.flex.border-b button').forEach(button => {
+                button.classList.remove('tab-active', 'text-indigo-600');
+                button.classList.add('text-gray-500');
+            });
+            
+            // Set current tab as active
+            event.currentTarget.classList.add('tab-active', 'text-indigo-600');
+            event.currentTarget.classList.remove('text-gray-500');
+        }
+
+        // Toggle switches functionality
+        document.querySelectorAll('.switch input').forEach(switchInput => {
+            switchInput.addEventListener('change', function() {
+                const slider = this.nextElementSibling;
+                if (this.checked) {
+                    slider.style.backgroundColor = '#4f46e5';
+                } else {
+                    slider.style.backgroundColor = '#ccc';
+                }
+            });
+        });
+
+        // Simulate saving settings
+        document.querySelectorAll('button:has(.fa-save)').forEach(button => {
+            button.addEventListener('click', function() {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check mr-2"></i>Salvo!';
+                button.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+                button.classList.add('bg-green-600', 'hover:bg-green-700');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('bg-green-600', 'hover:bg-green-700');
+                    button.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>

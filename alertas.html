@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnalyticsPro | Gerenciamento de Alertas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .sidebar:hover {
+            width: 250px;
+        }
+        .sidebar:hover .sidebar-text {
+            display: block;
+        }
+        .alert-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .glow-text {
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.7);
+        }
+        .priority-high {
+            border-left: 4px solid #ef4444;
+        }
+        .priority-medium {
+            border-left: 4px solid #f59e0b;
+        }
+        .priority-low {
+            border-left: 4px solid #10b981;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="sidebar bg-indigo-900 text-white w-20 hover:w-64 transition-all duration-300 ease-in-out fixed h-full">
+            <div class="p-4 flex items-center justify-between border-b border-indigo-800">
+                <div class="flex items-center">
+                    <i class="fas fa-chart-line text-2xl text-indigo-300"></i>
+                    <span class="sidebar-text ml-3 text-xl font-bold hidden">AnalyticsPro</span>
+                </div>
+                <i class="fas fa-bars text-indigo-300 cursor-pointer"></i>
+            </div>
+            <nav class="mt-6">
+                <div class="px-4 py-3 mt-2 flex items-center hover:bg-indigo-800 rounded-r-lg cursor-pointer">
+                    <i class="fas fa-tachometer-alt text-indigo-300"></i>
+                    <a href="dashboard.html"><span class="sidebar-text ml-3 hidden">Dashboard</span></a>
+                </div>
+                <div class="px-4 py-3 mt-2 flex items-center hover:bg-indigo-800 rounded-r-lg cursor-pointer">
+                    <i class="fas fa-database text-indigo-300"></i>
+                    <a href="fontedados.html"><span class="sidebar-text ml-3 hidden">Fontes de Dados</span></a>
+                </div>
+                <div class="px-4 py-3 mt-2 flex items-center hover:bg-indigo-800 rounded-r-lg cursor-pointer">
+                    <i class="fas fa-chart-pie text-indigo-300"></i>
+                    <a href="relatorio.html"><span class="sidebar-text ml-3 hidden">Relatórios</span></a>
+                </div>
+                <div class="px-4 py-3 mt-2 flex items-center bg-indigo-800 rounded-r-lg cursor-pointer">
+                    <i class="fas fa-bell text-indigo-300"></i>
+                    <span class="sidebar-text ml-3 hidden">Alertas</span>
+                </div>
+                <div class="px-4 py-3 mt-2 flex items-center hover:bg-indigo-800 rounded-r-lg cursor-pointer">
+                    <i class="fas fa-cog text-indigo-300"></i>
+                    <a href="config.html"><span class="sidebar-text ml-3 hidden">Configurações</span></a>
+                </div>
+            </nav>
+            <div class="absolute bottom-0 w-full p-4 border-t border-indigo-800">
+                <div class="flex items-center">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-10 h-10 rounded-full" alt="Profile">
+                    <div class="sidebar-text ml-3 hidden">
+                        <p class="font-medium">Ana Silva</p>
+                        <p class="text-xs text-indigo-300">Admin</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 ml-20 overflow-y-auto">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm">
+                <div class="flex items-center justify-between px-6 py-4">
+                    <h1 class="text-2xl font-bold text-gray-800">Gerenciamento de Alertas</h1>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <input type="text" placeholder="Buscar alertas..." class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                        <div class="relative">
+                            <i class="fas fa-bell text-red-500 text-xl cursor-pointer"></i>
+                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">5</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Alerts Content -->
+            <main class="p-6">
+                <!-- Alert Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Alertas Ativos</p>
+                                <h3 class="text-3xl font-bold mt-2 text-red-500">12</h3>
+                                <p class="text-sm mt-1"><span class="text-red-500 font-medium">5 não resolvidos</span></p>
+                            </div>
+                            <div class="bg-red-100 p-3 rounded-full">
+                                <i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Alta Prioridade</p>
+                                <h3 class="text-3xl font-bold mt-2">4</h3>
+                                <p class="text-sm mt-1"><span class="font-medium">2 novos hoje</span></p>
+                            </div>
+                            <div class="bg-orange-100 p-3 rounded-full">
+                                <i class="fas fa-arrow-up text-orange-500 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Média Resposta</p>
+                                <h3 class="text-3xl font-bold mt-2">2.3h</h3>
+                                <p class="text-green-500 text-sm mt-1"><i class="fas fa-arrow-down mr-1"></i> 15% melhor</p>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-full">
+                                <i class="fas fa-clock text-blue-500 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Alertas Hoje</p>
+                                <h3 class="text-3xl font-bold mt-2 pulse bg-red-100 rounded-full px-3 py-1 inline-block">7</h3>
+                                <p class="text-blue-500 text-sm mt-1"><i class="fas fa-circle mr-1 text-xs"></i> Em tempo real</p>
+                            </div>
+                            <div class="bg-purple-100 p-3 rounded-full">
+                                <i class="fas fa-bell text-purple-500 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alert Actions -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-800">Seus <span class="glow-text text-red-500">Alertas</span></h2>
+                        <p class="text-gray-500 text-sm">Gerencie e responda aos alertas do sistema</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition flex items-center">
+                            <i class="fas fa-plus mr-2"></i> Novo Alerta
+                        </button>
+                        <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition flex items-center">
+                            <i class="fas fa-filter mr-2"></i> Filtrar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Alerts List -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+                    <div class="grid grid-cols-12 bg-gray-50 p-4 border-b border-gray-200 font-medium text-gray-500 text-sm">
+                        <div class="col-span-1">Status</div>
+                        <div class="col-span-4">Alerta</div>
+                        <div class="col-span-2">Prioridade</div>
+                        <div class="col-span-2">Origem</div>
+                        <div class="col-span-2">Data</div>
+                        <div class="col-span-1">Ações</div>
+                    </div>
+                    
+                    <!-- Active Alerts -->
+                    <div class="p-2 border-b border-gray-200">
+                        <h3 class="font-medium text-gray-700 p-2">Alertas Ativos (5)</h3>
+                        
+                        <!-- Alert Item 1 -->
+                        <div class="alert-card grid grid-cols-12 items-center p-4 hover:bg-gray-50 transition duration-200 priority-high">
+                            <div class="col-span-1">
+                                <span class="h-3 w-3 bg-red-500 rounded-full inline-block"></span>
+                            </div>
+                            <div class="col-span-4">
+                                <p class="font-medium">Queda repentina no tráfego</p>
+                                <p class="text-sm text-gray-500">Redução de 45% nas visitas à página inicial</p>
+                            </div>
+                            <div class="col-span-2">
+                                <span class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">Alta</span>
+                            </div>
+                            <div class="col-span-2">
+                                <p class="text-sm">Monitor de Tráfego</p>
+                            </div>
+                            <div class="col-span-2">
+                                <p class="text-sm">Hoje, 09:32</p>
+                            </div>
+                            <div class="col-span-1 flex justify-end space-x-2">
+                                <button class="text-gray-400 hover:text-indigo-600">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-red-600">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Alert Item 2 -->
+                        <div class="alert-card grid grid-cols-12 items-center p-4 hover:bg-gray-50 transition duration-200 priority-medium">
+                            <div class="col-span-1">
+                                <span class="h-3 w-3 bg-yellow-500 rounded-full inline-block"></span>
+                            </div>
+                            <div class="col-span-4">
+                                <p class="font-medium">Erro no checkout</p>
+                                <p class="text-sm text-gray-500">5% dos usuários enfrentando erro no pagamento</p>
+                            </div>
+                            <div class="col-span-2">
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Média</span>
+                            </div>
+                            <div class="col-span-2">
+                                <p class="text-sm">Sistema de Vendas</p>
+                            </div>
+                            <div class="col-span-2">
+                                <p class="text-sm">Hoje, 11:15</p>
+                            </div>
+                            <div class="col-span-1 flex justify-end space-x-2">
+                                <button class="text-gray-400 hover:text-indigo-600">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-red-600">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Alert Item 3 -->
+                        <div class="alert-card grid grid-cols-12 items-center p-4 hover:bg-gray-50 transition duration-200 priority-high">
+                            <div class="col-span-1">
+                                <span class="h-3 w-3 bg-red-500 rounded-full inline-block"></span>
+                            </div>
+                            <div class="col-span-4">
+                                <p class="font-medium">Servidor lento</p>
+                                <p class="text-sm text-gray-500">Tempo de resposta acima de 3s para 30% das requisições</p>
+                            </div>
+                            <div class="col-span-2">
+                                <span class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">Alta</span>
+                            </div>
+                            <div class="col-span-2">
+                                <p class="text-sm">Monitor de Servidor</p>
+                            </div>
+                            <div class="col-span-2">
+                                <p class="text-sm">Hoje, 14:48</p>
+                            </div>
+                            <div class="col-span-1 flex justify-end space-x-2">
+                                <button class="text-gray-400 hover:text-indigo-600">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-red-600">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Resolved Alerts -->
+                    <div class="p-2">
+                        <h3 class="font-medium text-gray-700 p-2">Alertas Resolvidos (7)</h3>
+                        
+                        <!-- Alert Item 4 -->
+                        <div class="alert-card grid grid-cols-12 items-center p-4 hover:bg-gray-50 transition duration-200 priority-medium">
+                            <div class="col-span-1">
+                                <span class="h-3 w-3 bg-green-500 rounded-full inline-block"></span>
+                            </div>
+                            <div class="col-span-4">
+                                <p class="font-medium">Pico incomum de tráfego</p>
+                                <p class="text-sm text-gray-500">Aumento de 200% no tráfego de referência</p>
+                            </div>
+                            <div class="col-span-2">
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Média</span>
+                            </div>
+                            <div class="col-span-2">
+                                <p class="text-sm">Monitor de Tráfego</p>
+                            </div>
+                            <div class="col-span-2">
+                                <p class="text-sm">Ontem, 16:22</p>
+                            </div>
+                            <div class="col-span-1 flex justify-end space-x-2">
+                                <button class="text-indigo-600">
+                                    <i class="fas fa-redo"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-red-600">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Alert Item 5 -->
+                        <div class="alert-card grid grid-cols-12 items-center p-4 hover:bg-gray-50 transition duration-200 priority-low">
+                            <div class="col-span-1">
+                                <span class="h-3 w-3 bg-green-500 rounded-full inline-block"></span>
+                            </div>
+                            <div class="col-span-4">
+                                <p class="font-medium">Atualização pendente</p>
+                                <p class="text-sm text-gray-500">Versão 2.4.1 do sistema disponível</p>
+                            </div>
+                            <div class="col-span-2">
+                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Baixa</span>
+                            </div>
+                            <div class="col-span-2">
+                                <p class="text-sm">Sistema de Atualização</p>
+                            </div>
+                            <div class="col-span-2">
+                                <p class="text-sm">Ontem, 10:05</p>
+                            </div>
+                            <div class="col-span-1 flex justify-end space-x-2">
+                                <button class="text-indigo-600">
+                                    <i class="fas fa-redo"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-red-600">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alert Configuration -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Alert Rules -->
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-semibold text-gray-800">Regras de Alerta</h2>
+                            <button class="px-3 py-1 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700">
+                                <i class="fas fa-plus mr-1"></i> Nova Regra
+                            </button>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <!-- Rule 1 -->
+                            <div class="flex items-start p-3 border border-gray-200 rounded-lg">
+                                <div class="bg-indigo-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-bolt text-indigo-500"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium">Queda de Tráfego</p>
+                                    <p class="text-sm text-gray-500">Alerta quando houver queda superior a 30% no tráfego em 1h</p>
+                                    <div class="mt-2 flex space-x-2">
+                                        <span class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">Alta Prioridade</span>
+                                        <span class="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">Ativo</span>
+                                    </div>
+                                </div>
+                                <div class="text-gray-400 hover:text-indigo-600 cursor-pointer">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </div>
+                            </div>
+                            
+                            <!-- Rule 2 -->
+                            <div class="flex items-start p-3 border border-gray-200 rounded-lg">
+                                <div class="bg-yellow-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-shopping-cart text-yellow-500"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium">Abandono de Carrinho</p>
+                                    <p class="text-sm text-gray-500">Alerta quando taxa de abandono ultrapassar 75%</p>
+                                    <div class="mt-2 flex space-x-2">
+                                        <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Média Prioridade</span>
+                                        <span class="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">Ativo</span>
+                                    </div>
+                                </div>
+                                <div class="text-gray-400 hover:text-indigo-600 cursor-pointer">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </div>
+                            </div>
+                            
+                            <!-- Rule 3 -->
+                            <div class="flex items-start p-3 border border-gray-200 rounded-lg">
+                                <div class="bg-green-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-server text-green-500"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium">Uso de CPU</p>
+                                    <p class="text-sm text-gray-500">Alerta quando uso médio de CPU ultrapassar 85% por 15min</p>
+                                    <div class="mt-2 flex space-x-2">
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Baixa Prioridade</span>
+                                        <span class="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">Ativo</span>
+                                    </div>
+                                </div>
+                                <div class="text-gray-400 hover:text-indigo-600 cursor-pointer">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Notification Settings -->
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <h2 class="text-lg font-semibold text-gray-800 mb-6">Configurações de Notificação</h2>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+                                <div>
+                                    <p class="font-medium">Alertas por Email</p>
+                                    <p class="text-sm text-gray-500">Receber notificações por email</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" value="" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                </label>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+                                <div>
+                                    <p class="font-medium">Notificações Push</p>
+                                    <p class="text-sm text-gray-500">Receber notificações no navegador</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" value="" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                </label>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+                                <div>
+                                    <p class="font-medium">Alertas de Alta Prioridade</p>
+                                    <p class="text-sm text-gray-500">Receber SMS para alertas críticos</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" value="" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                </label>
+                            </div>
+                            
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <p class="font-medium mb-2">Horário de Notificação</p>
+                                <div class="flex space-x-4">
+                                    <div class="flex-1">
+                                        <label class="block text-sm text-gray-500 mb-1">Das</label>
+                                        <select class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                                            <option>08:00</option>
+                                            <option selected>09:00</option>
+                                            <option>10:00</option>
+                                        </select>
+                                    </div>
+                                    <div class="flex-1">
+                                        <label class="block text-sm text-gray-500 mb-1">Até</label>
+                                        <select class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                                            <option>17:00</option>
+                                            <option selected>18:00</option>
+                                            <option>19:00</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Simulate real-time alerts count update
+        setInterval(() => {
+            const activeAlertsCount = document.querySelector('.pulse');
+            const current = parseInt(activeAlertsCount.textContent);
+            const change = Math.floor(Math.random() * 3) - 1; // -1, 0 or 1
+            const newValue = Math.max(0, current + change);
+            activeAlertsCount.textContent = newValue;
+            
+            // Add pulse animation if new alert comes in
+            if (change > 0) {
+                activeAlertsCount.classList.add('animate-pulse');
+                setTimeout(() => {
+                    activeAlertsCount.classList.remove('animate-pulse');
+                }, 2000);
+            }
+        }, 10000);
+        
+        // Toggle alert status when clicking checkmark
+        document.querySelectorAll('.fa-check').forEach(button => {
+            button.addEventListener('click', function() {
+                const alertItem = this.closest('.alert-card');
+                const statusDot = alertItem.querySelector('.rounded-full');
+                
+                // Change to resolved status
+                statusDot.classList.remove('bg-red-500', 'bg-yellow-500');
+                statusDot.classList.add('bg-green-500');
+                
+                // Change checkmark to redo icon
+                this.classList.remove('fa-check', 'text-gray-400');
+                this.classList.add('fa-redo', 'text-indigo-600');
+            });
+        });
+        
+        // Toggle alert status when clicking redo
+        document.querySelectorAll('.fa-redo').forEach(button => {
+            button.addEventListener('click', function() {
+                const alertItem = this.closest('.alert-card');
+                const statusDot = alertItem.querySelector('.rounded-full');
+                const priority = alertItem.classList.contains('priority-high') ? 'red' : 
+                                alertItem.classList.contains('priority-medium') ? 'yellow' : 'gray';
+                
+                // Change to active status
+                statusDot.classList.remove('bg-green-500');
+                statusDot.classList.add(`bg-${priority}-500`);
+                
+                // Change redo icon to checkmark
+                this.classList.remove('fa-redo', 'text-indigo-600');
+                this.classList.add('fa-check', 'text-gray-400');
+            });
+        });
+    </script>
+</body>
+</html>
