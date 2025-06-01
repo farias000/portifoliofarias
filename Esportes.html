@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esportes - ShopVue</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .cart-sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+        .cart-open {
+            transform: translateX(0);
+        }
+        .cart-closed {
+            transform: translateX(100%);
+        }
+        .dropdown-menu {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+        }
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1543357480-c60d40007fa3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        .filter-section {
+            scrollbar-width: thin;
+            scrollbar-color: #c7d2fe #f1f1f1;
+        }
+        .filter-section::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .filter-section::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .filter-section::-webkit-scrollbar-thumb {
+            background-color: #c7d2fe;
+            border-radius: 10px;
+        }
+        .color-selector input[type="radio"]:checked + label {
+            border: 2px solid #4f46e5;
+            box-shadow: 0 0 0 2px white, 0 0 0 4px #4f46e5;
+        }
+        .sport-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #4f46e5;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Header/Navbar -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center">
+                <a href="#" class="text-2xl font-bold text-indigo-600">Shop<span class="text-gray-800">Vue</span></a>
+            </div>
+
+            <!-- Search Bar (hidden on mobile) -->
+            <div class="hidden md:flex flex-1 mx-8">
+                <div class="relative w-full max-w-xl">
+                    <input type="text" placeholder="Buscar produtos..." class="w-full px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <button class="bg-indigo-600 text-white px-4 py-2 rounded-r-lg hover:bg-indigo-700 transition">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex items-center space-x-6">
+                <div class="hidden md:flex space-x-6">
+                    <a href="lojavirtual.html" class="text-gray-700 hover:text-indigo-600 transition">Home</a>
+                    <div class="dropdown relative">
+                        <button class="text-gray-700 hover:text-indigo-600 transition flex items-center">
+                            Categorias <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu absolute top-full left-0 mt-2 w-48 bg-white shadow-lg rounded-md py-1 z-10">
+                            <a href="Eletronicos.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Eletrônicos</a>
+                            <a href="Roupas.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Roupas</a>
+                            <a href="CasaJardim.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Casa e Jardim</a>
+                            <a href="Esportes.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 font-medium text-indigo-600">Esportes</a>
+                        </div>
+                    </div>
+                    <a href="#" class="text-gray-700 hover:text-indigo-600 transition">Ofertas</a>
+                    <a href="#" class="text-gray-700 hover:text-indigo-600 transition">Contato</a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <button id="cart-button" class="relative text-gray-700 hover:text-indigo-600">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-indigo-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </button>
+                    
+                    <div class="dropdown relative">
+                        <button class="flex items-center space-x-1 text-gray-700 hover:text-indigo-600">
+                            <i class="fas fa-user text-xl"></i>
+                            <span class="hidden md:inline">Minha Conta</span>
+                        </button>
+                        <div class="dropdown-menu absolute right-0 top-full mt-2 w-48 bg-white shadow-lg rounded-md py-1 z-10">
+                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Login</a>
+                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Cadastre-se</a>
+                            <hr class="my-1">
+                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Meus Pedidos</a>
+                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Favoritos</a>
+                        </div>
+                    </div>
+
+                    <!-- Mobile menu button -->
+                    <button id="mobile-menu-button" class="md:hidden text-gray-700">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <div class="container mx-auto px-4 py-3">
+                <div class="mb-4">
+                    <input type="text" placeholder="Buscar produtos..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div class="flex flex-col space-y-3">
+                    <a href="lojavirtual.html" class="text-gray-700 hover:text-indigo-600">Home</a>
+                    <a href="#" class="text-gray-700 hover:text-indigo-600">Categorias</a>
+                    <a href="#" class="text-gray-700 hover:text-indigo-600">Ofertas</a>
+                    <a href="#" class="text-gray-700 hover:text-indigo-600">Contato</a>
+                    <hr>
+                    <a href="#" class="text-gray-700 hover:text-indigo-600">Login</a>
+                    <a href="#" class="text-gray-700 hover:text-indigo-600">Cadastre-se</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section text-white py-20">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Esportes e Atividades Físicas</h1>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">Equipamentos, roupas e acessórios para todos os esportes e níveis</p>
+            <div class="flex justify-center space-x-4">
+                <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg transition transform hover:scale-105">
+                    Promoções
+                </button>
+                <button class="bg-transparent border-2 border-white hover:bg-white hover:text-indigo-600 text-white font-bold py-3 px-8 rounded-lg transition transform hover:scale-105">
+                    Novidades
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Breadcrumb -->
+    <div class="bg-gray-100 py-3">
+        <div class="container mx-auto px-4">
+            <nav class="flex" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a href="#" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-indigo-600">
+                            <i class="fas fa-home mr-2"></i>
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                            <a href="#" class="ml-1 text-sm font-medium text-gray-700 hover:text-indigo-600 md:ml-2">Categorias</a>
+                        </div>
+                    </li>
+                    <li aria-current="page">
+                        <div class="flex items-center">
+                            <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                            <span class="ml-1 text-sm font-medium text-indigo-600 md:ml-2">Esportes</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <section class="py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row gap-6">
+                <!-- Filters Sidebar -->
+                <div class="w-full md:w-64 flex-shrink-0">
+                    <div class="bg-white p-4 rounded-lg shadow-sm sticky top-24">
+                        <div class="mb-6">
+                            <h3 class="font-bold text-lg mb-4 flex items-center justify-between">
+                                <span>Filtrar por</span>
+                                <button class="text-sm text-indigo-600 hover:text-indigo-800">Limpar tudo</button>
+                            </h3>
+                            
+                            <!-- Price Range -->
+                            <div class="mb-6">
+                                <h4 class="font-semibold mb-3 flex items-center justify-between">
+                                    <span>Faixa de Preço</span>
+                                    <i class="fas fa-chevron-down text-xs"></i>
+                                </h4>
+                                <div class="space-y-2">
+                                    <div class="flex items-center">
+                                        <input id="price-1" type="radio" name="price" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                                        <label for="price-1" class="ml-2 text-sm text-gray-700">Até R$ 100</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="price-2" type="radio" name="price" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                                        <label for="price-2" class="ml-2 text-sm text-gray-700">R$ 100 - R$ 200</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="price-3" type="radio" name="price" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                                        <label for="price-3" class="ml-2 text-sm text-gray-700">R$ 200 - R$ 500</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="price-4" type="radio" name="price" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                                        <label for="price-4" class="ml-2 text-sm text-gray-700">Acima de R$ 500</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Categories -->
+                            <div class="mb-6">
+                                <h4 class="font-semibold mb-3 flex items-center justify-between">
+                                    <span>Esportes</span>
+                                    <i class="fas fa-chevron-down text-xs"></i>
+                                </h4>
+                                <div class="space-y-2">
+                                    <div class="flex items-center">
+                                        <input id="cat-1" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                                        <label for="cat-1" class="ml-2 text-sm text-gray-700">Futebol</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="cat-2" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                                        <label for="cat-2" class="ml-2 text-sm text-gray-700">Corrida</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="cat-3" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                                        <label for="cat-3" class="ml-2 text-sm text-gray-700">Musculação</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="cat-4" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                                        <label for="cat-4" class="ml-2 text-sm text-gray-700">Ciclismo</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="cat-5" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                                        <label for="cat-5" class="ml-2 text-sm text-gray-700">Natação</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="cat-6" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                                        <label for="cat-6" class="ml-2 text-sm text-gray-700">Tênis</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="cat-7" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                                        <label for="cat-7" class="ml-2 text-sm text-gray-700">Basquete</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Brands -->
+                            <div class="mb-6">
+                                <h4 class="font-semibold mb-3 flex items-center justify-between">
+                                    <span>Marcas</span>
+                                    <i class="fas fa-chevron-down text-xs"></i>
+                                </h4>
+                                <div class="space-y-2">
+                                    <div class="flex items-center">
+                                        <input id="brand-1" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                                        <label for="brand-1" class="ml-2 text-sm text-gray-700">Nike</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="brand-2" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                                        <label for="brand-2" class="ml-2 text-sm text-gray-700">Adidas</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="brand-3" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                                        <label for="brand-3" class="ml-2 text-sm text-gray-700">Puma</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="brand-4" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                                        <label for="brand-4" class="ml-2 text-sm text-gray-700">Under Armour</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="brand-5" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                                        <label for="brand-5" class="ml-2 text-sm text-gray-700">Olympikus</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Colors -->
+                            <div class="mb-6">
+                                <h4 class="font-semibold mb-3 flex items-center justify-between">
+                                    <span>Cores</span>
+                                    <i class="fas fa-chevron-down text-xs"></i>
+                                </h4>
+                                <div class="grid grid-cols-5 gap-2 color-selector">
+                                    <div>
+                                        <input type="radio" name="color" id="color-black" class="hidden">
+                                        <label for="color-black" class="block w-6 h-6 rounded-full bg-black border-2 border-white cursor-pointer"></label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" name="color" id="color-white" class="hidden">
+                                        <label for="color-white" class="block w-6 h-6 rounded-full bg-white border-2 border-gray-300 cursor-pointer"></label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" name="color" id="color-red" class="hidden">
+                                        <label for="color-red" class="block w-6 h-6 rounded-full bg-red-500 border-2 border-white cursor-pointer"></label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" name="color" id="color-blue" class="hidden">
+                                        <label for="color-blue" class="block w-6 h-6 rounded-full bg-blue-500 border-2 border-white cursor-pointer"></label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" name="color" id="color-green" class="hidden">
+                                        <label for="color-green" class="block w-6 h-6 rounded-full bg-green-500 border-2 border-white cursor-pointer"></label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" name="color" id="color-yellow" class="hidden">
+                                        <label for="color-yellow" class="block w-6 h-6 rounded-full bg-yellow-400 border-2 border-white cursor-pointer"></label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" name="color" id="color-purple" class="hidden">
+                                        <label for="color-purple" class="block w-6 h-6 rounded-full bg-purple-500 border-2 border-white cursor-pointer"></label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" name="color" id="color-pink" class="hidden">
+                                        <label for="color-pink" class="block w-6 h-6 rounded-full bg-pink-400 border-2 border-white cursor-pointer"></label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" name="color" id="color-gray" class="hidden">
+                                        <label for="color-gray" class="block w-6 h-6 rounded-full bg-gray-400 border-2 border-white cursor-pointer"></label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" name="color" id="color-indigo" class="hidden">
+                                        <label for="color-indigo" class="block w-6 h-6 rounded-full bg-indigo-500 border-2 border-white cursor-pointer"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Size -->
+                            <div class="mb-6">
+                                <h4 class="font-semibold mb-3 flex items-center justify-between">
+                                    <span>Tamanhos</span>
+                                    <i class="fas fa-chevron-down text-xs"></i>
+                                </h4>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <button class="border border-gray-300 rounded-md px-2 py-1 text-sm hover:bg-gray-100">P</button>
+                                    <button class="border border-gray-300 rounded-md px-2 py-1 text-sm hover:bg-gray-100">M</button>
+                                    <button class="border border-gray-300 rounded-md px-2 py-1 text-sm hover:bg-gray-100">G</button>
+                                    <button class="border border-gray-300 rounded-md px-2 py-1 text-sm hover:bg-gray-100">GG</button>
+                                    <button class="border border-gray-300 rounded-md px-2 py-1 text-sm hover:bg-gray-100">36</button>
+                                    <button class="border border-gray-300 rounded-md px-2 py-1 text-sm hover:bg-gray-100">38</button>
+                                    <button class="border border-gray-300 rounded-md px-2 py-1 text-sm hover:bg-gray-100">40</button>
+                                    <button class="border border-gray-300 rounded-md px-2 py-1 text-sm hover:bg-gray-100">42</button>
+                                    <button class="border border-gray-300 rounded-md px-2 py-1 text-sm hover:bg-gray-100">44</button>
+                                </div>
+                            </div>
+                            
+                            <button class="w-full bg-indigo-600 text-white py-2 rounded-md font-medium hover:bg-indigo-700 transition">
+                                Aplicar Filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Products Section -->
+                <div class="flex-1">
+                    <!-- Sorting and View Options -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm mb-6 flex flex-col md:flex-row justify-between items-start md:items-center">
+                        <div class="mb-4 md:mb-0">
+                            <h2 class="text-xl font-bold">Esportes</h2>
+                            <p class="text-gray-600 text-sm">Mostrando 1-12 de 48 produtos</p>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center">
+                                <span class="text-gray-600 mr-2 text-sm hidden md:inline">Ordenar por:</span>
+                                <select class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <option>Mais relevantes</option>
+                                    <option>Menor preço</option>
+                                    <option>Maior preço</option>
+                                    <option>Melhor avaliados</option>
+                                    <option>Lançamentos</option>
+                                </select>
+                            </div>
+                            
+                            <div class="flex items-center space-x-2">
+                                <button class="p-2 text-gray-400 hover:text-indigo-600">
+                                    <i class="fas fa-th-large"></i>
+                                </button>
+                                <button class="p-2 text-gray-400 hover:text-indigo-600">
+                                    <i class="fas fa-th-list"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Products Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Product 1 -->
+                        <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
+                            <div class="relative">
+                                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Tênis de Corrida" class="w-full h-64 object-cover">
+                                <div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">-20%</div>
+                                <span class="sport-badge">Corrida</span>
+                                <button class="absolute top-2 left-2 bg-white p-2 rounded-full text-gray-700 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex items-center mb-1">
+                                    <div class="flex text-yellow-400">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <span class="text-gray-600 text-xs ml-1">(215)</span>
+                                </div>
+                                <h3 class="font-semibold text-lg mb-1">Tênis de Corrida Nike Air Zoom</h3>
+                                <p class="text-gray-600 text-sm mb-2">Amortecimento premium, leve e respirável</p>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="text-gray-500 line-through text-sm">R$ 599,90</span>
+                                        <span class="text-indigo-600 font-bold ml-2">R$ 479,90</span>
+                                    </div>
+                                    <button class="add-to-cart bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 2 -->
+                        <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
+                            <div class="relative">
+                                <img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Bola de Futebol" class="w-full h-64 object-cover">
+                                <div class="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">Novo</div>
+                                <span class="sport-badge">Futebol</span>
+                                <button class="absolute top-2 left-2 bg-white p-2 rounded-full text-gray-700 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex items-center mb-1">
+                                    <div class="flex text-yellow-400">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <span class="text-gray-600 text-xs ml-1">(143)</span>
+                                </div>
+                                <h3 class="font-semibold text-lg mb-1">Bola de Futebol Adidas Champions League</h3>
+                                <p class="text-gray-600 text-sm mb-2">Tamanho oficial 5, alta durabilidade</p>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="text-indigo-600 font-bold">R$ 249,90</span>
+                                    </div>
+                                    <button class="add-to-cart bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 3 -->
+                        <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
+                            <div class="relative">
+                                <img src="https://images.unsplash.com/photo-1538805060514-97d9cc17730c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Luva de Boxe" class="w-full h-64 object-cover">
+                                <span class="sport-badge">Boxe</span>
+                                <button class="absolute top-2 left-2 bg-white p-2 rounded-full text-gray-700 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex items-center mb-1">
+                                    <div class="flex text-yellow-400">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="text-gray-600 text-xs ml-1">(87)</span>
+                                </div>
+                                <h3 class="font-semibold text-lg mb-1">Luva de Boxe Profissional</h3>
+                                <p class="text-gray-600 text-sm mb-2">Couro genuíno, 12oz, preta</p>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="text-indigo-600 font-bold">R$ 179,90</span>
+                                    </div>
+                                    <button class="add-to-cart bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 4 -->
+                        <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
+                            <div class="relative">
+                                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Camisa de Time" class="w-full h-64 object-cover">
+                                <div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">-15%</div>
+                                <span class="sport-badge">Futebol</span>
+                                <button class="absolute top-2 left-2 bg-white p-2 rounded-full text-gray-700 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex items-center mb-1">
+                                    <div class="flex text-yellow-400">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <span class="text-gray-600 text-xs ml-1">(312)</span>
+                                </div>
+                                <h3 class="font-semibold text-lg mb-1">Camisa de Futebol Nike</h3>
+                                <p class="text-gray-600 text-sm mb-2">Tecido Dry-Fit, torcedor, tamanhos P a GG</p>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="text-gray-500 line-through text-sm">R$ 299,90</span>
+                                        <span class="text-indigo-600 font-bold ml-2">R$ 254,90</span>
+                                    </div>
+                                    <button class="add-to-cart bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 5 -->
+                        <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
+                            <div class="relative">
+                                <img src="https://images.unsplash.com/photo-1511994298241-608e28f14fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Bicicleta" class="w-full h-64 object-cover">
+                                <span class="sport-badge">Ciclismo</span>
+                                <button class="absolute top-2 left-2 bg-white p-2 rounded-full text-gray-700 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex items-center mb-1">
+                                    <div class="flex text-yellow-400">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <span class="text-gray-600 text-xs ml-1">(64)</span>
+                                </div>
+                                <h3 class="font-semibold text-lg mb-1">Bicicleta Speed Caloi 10</h3>
+                                <p class="text-gray-600 text-sm mb-2">Quadro de alumínio, 21 velocidades, aro 700</p>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="text-indigo-600 font-bold">R$ 2.799,90</span>
+                                    </div>
+                                    <button class="add-to-cart bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 6 -->
+                        <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
+                            <div class="relative">
+                                <img src="https://images.unsplash.com/photo-1571019614242-c5c5a73d6587?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Raquete de Tênis" class="w-full h-64 object-cover">
+                                <div class="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">Novo</div>
+                                <span class="sport-badge">Tênis</span>
+                                <button class="absolute top-2 left-2 bg-white p-2 rounded-full text-gray-700 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex items-center mb-1">
+                                    <div class="flex text-yellow-400">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <span class="text-gray-600 text-xs ml-1">(42)</span>
+                                </div>
+                                <h3 class="font-semibold text-lg mb-1">Raquete de Tênis Wilson Pro Staff</h3>
+                                <p class="text-gray-600 text-sm mb-2">Peso 300g, grip tamanho 2, cordas incluídas</p>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="text-indigo-600 font-bold">R$ 899,90</span>
+                                    </div>
+                                    <button class="add-to-cart bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 7 -->
+                        <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
+                            <div class="relative">
+                                <img src="https://images.unsplash.com/photo-1538805060514-97d9cc17730c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Halteres" class="w-full h-64 object-cover">
+                                <div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">-25%</div>
+                                <span class="sport-badge">Musculação</span>
+                                <button class="absolute top-2 left-2 bg-white p-2 rounded-full text-gray-700 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex items-center mb-1">
+                                    <div class="flex text-yellow-400">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="text-gray-600 text-xs ml-1">(178)</span>
+                                </div>
+                                <h3 class="font-semibold text-lg mb-1">Kit Halteres Ajustáveis 20kg</h3>
+                                <p class="text-gray-600 text-sm mb-2">Ajuste de 2kg a 20kg, barras curtas incluídas</p>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="text-gray-500 line-through text-sm">R$ 399,90</span>
+                                        <span class="text-indigo-600 font-bold ml-2">R$ 299,90</span>
+                                    </div>
+                                    <button class="add-to-cart bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 8 -->
+                        <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
+                            <div class="relative">
+                                <img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Bola de Basquete" class="w-full h-64 object-cover">
+                                <span class="sport-badge">Basquete</span>
+                                <button class="absolute top-2 left-2 bg-white p-2 rounded-full text-gray-700 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex items-center mb-1">
+                                    <div class="flex text-yellow-400">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <span class="text-gray-600 text-xs ml-1">(96)</span>
+                                </div>
+                                <h3 class="font-semibold text-lg mb-1">Bola de Basquete Spalding NBA</h3>
+                                <p class="text-gray-600 text-sm mb-2">Tamanho oficial 7, couro sintético</p>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="text-indigo-600 font-bold">R$ 199,90</span>
+                                    </div>
+                                    <button class="add-to-cart bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 9 -->
+                        <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
+                            <div class="relative">
+                                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Mochila Esportiva" class="w-full h-64 object-cover">
+                                <div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">-30%</div>
+                                <span class="sport-badge">Acessórios</span>
+                                <button class="absolute top-2 left-2 bg-white p-2 rounded-full text-gray-700 hover:text-red-500">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex items-center mb-1">
+                                    <div class="flex text-yellow-400">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <span class="text-gray-600 text-xs ml-1">(231)</span>
+                                </div>
+                                <h3 class="font-semibold text-lg mb-1">Mochila Esportiva Nike Heritage</h3>
+                                <p class="text-gray-600 text-sm mb-2">31L, múltiplos bolsos, resistente à água</p>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="text-gray-500 line-through text-sm">R$ 249,90</span>
+                                        <span class="text-indigo-600 font-bold ml-2">R$ 174,90</span>
+                                    </div>
+                                    <button class="add-to-cart bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="mt-10 flex justify-center">
+                        <nav class="flex items-center space-x-1">
+                            <button class="px-3 py-1 rounded border border-gray-300 text-gray-500 hover:bg-gray-100">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="px-3 py-1 rounded border border-indigo-600 bg-indigo-600 text-white">1</button>
+                            <button class="px-3 py-1 rounded border border-gray-300 text-gray-700 hover:bg-gray-100">2</button>
+                            <button class="px-3 py-1 rounded border border-gray-300 text-gray-700 hover:bg-gray-100">3</button>
+                            <button class="px-3 py-1 rounded border border-gray-300 text-gray-700 hover:bg-gray-100">4</button>
+                            <button class="px-3 py-1 rounded border border-gray-300 text-gray-700 hover:bg-gray-100">5</button>
+                            <span class="px-2 text-gray-500">...</span>
+                            <button class="px-3 py-1 rounded border border-gray-300 text-gray-700 hover:bg-gray-100">8</button>
+                            <button class="px-3 py-1 rounded border border-gray-300 text-gray-500 hover:bg-gray-100">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Brands -->
+    <section class="py-12 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-10">Marcas Esportivas</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-center hover:shadow-md transition">
+                    <img src="https://via.placeholder.com/150x60?text=Nike" alt="Nike" class="h-10">
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-center hover:shadow-md transition">
+                    <img src="https://via.placeholder.com/150x60?text=Adidas" alt="Adidas" class="h-10">
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-center hover:shadow-md transition">
+                    <img src="https://via.placeholder.com/150x60?text=Puma" alt="Puma" class="h-10">
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-center hover:shadow-md transition">
+                    <img src="https://via.placeholder.com/150x60?text=Under+Armour" alt="Under Armour" class="h-10">
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-center hover:shadow-md transition">
+                    <img src="https://via.placeholder.com/150x60?text=Olympikus" alt="Olympikus" class="h-10">
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-center hover:shadow-md transition">
+                    <img src="https://via.placeholder.com/150x60?text=New+Balance" alt="New Balance" class="h-10">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="py-12 bg-indigo-600 text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-4">Fique por dentro das novidades</h2>
+            <p class="text-xl mb-6 max-w-2xl mx-auto">Assine nossa newsletter e receba dicas de treino, lançamentos e promoções exclusivas.</p>
+            <div class="max-w-md mx-auto flex">
+                <input type="email" placeholder="Seu melhor e-mail" class="flex-1 px-4 py-3 rounded-l-lg focus:outline-none text-gray-900">
+                <button class="bg-indigo-900 text-white px-6 py-3 rounded-r-lg hover:bg-indigo-800 transition">
+                    Assinar
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">ShopVue</h3>
+                    <p class="text-gray-400">A melhor experiência de compra online com produtos de qualidade e atendimento excepcional.</p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Institucional</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Sobre Nós</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Nossas Lojas</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Trabalhe Conosco</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Política de Privacidade</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Termos e Condições</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Atendimento</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Central de Ajuda</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Meus Pedidos</a></li>
+       
+</html>
